@@ -17,10 +17,61 @@ const sizes = {
 // Scene
 const scene = new THREE.Scene()
 
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000})
+const material = new THREE.MeshBasicMaterial({ 
+    color: 0xff0000,
+    wireframe: true
+})
+
+
+// Create an empty BufferGeometry
+const geometry = new THREE.BufferGeometry()
+
+// Define the position attribute
+const vertices = [
+    0, 0, 0,
+    1, 0, 0,
+    1, 1, 0,
+    0, 1, 0,
+    ];
+    const positionAttribute = new THREE.Float32BufferAttribute(vertices, 3);
+    geometry.setAttribute('position', positionAttribute);
+
+    // Define the index attribute
+const indices = [
+    0, 1, 2,
+    2, 3, 0,
+    ];
+    const indexAttribute = new THREE.Uint16BufferAttribute(indices, 1);
+    geometry.setIndex(indexAttribute);
+
+// Create 50 triangles (450 values)
+/*const count = 500
+const positionsArray = new Float32Array(count * 3 * 3)
+for(let i = 0; i < count * 3 * 3; i++)
+{
+    positionsArray[i] = (Math.random() - 0.5) * 4
+}
+
+// Create the attribute and name it 'position'
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
+geometry.setAttribute('position', positionsAttribute)*/
+
+/*const geometry = new THREE.BufferGeometry()
+
+const positionsArray = new Float32Array([
+    0, 0, 0, // First vertex
+    1, 0, 0, // Second vertex
+    0, 1, 0  // Third vertex
+])
+
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3)
+
+geometry.setAttribute('position', positionsAttribute)*/
+
 // Object
 const mesh = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1, 2, 2, 2),
+    //new THREE.BoxGeometry(1, 1, 1, 2, 2, 2),
+    geometry,
     material
 )
 scene.add(mesh)
@@ -88,7 +139,10 @@ window.addEventListener('dblclick', () =>
     }
 })
 
-
+const geometry_torus = new THREE.TorusGeometry( 0.5, 3, 5, 100 ); 
+//const material_torus = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+const torus = new THREE.Mesh( geometry_torus, material ); 
+//scene.add( torus );
 
 
 const tick = () =>
