@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from 'gsap'
+import {Pane} from 'tweakpane';
+const pane = new Pane();
 
 /**
  * Base
@@ -24,6 +26,95 @@ const mesh = new THREE.Mesh(
     material
 )
 scene.add(mesh)
+
+const folderMesh = pane.addFolder({
+    title: 'Mesh'
+})
+
+const folderPositionMesh = folderMesh.addFolder({
+    title: 'position',
+    expand: true,
+})
+
+
+folderPositionMesh.addInput(mesh.position, "x", {
+    label: "x",
+    min: -20,
+    max: 20,
+    step: 0.1
+})
+
+folderPositionMesh.addInput(mesh.position, "y", {
+    label: "y",
+    min: -20,
+    max: 20,
+    step: 0.1
+})
+
+folderPositionMesh.addInput(mesh.position, "z", {
+    label: "z",
+    min: -20,
+    max: 20,
+    step: 0.1
+})
+
+// Rotation
+const folderRotationMesh = folderMesh.addFolder({
+    title: 'rotation',
+    expand: true,
+})
+
+
+const meshRotX = folderRotationMesh.addInput(mesh.rotation, "x", {
+    label: "axis x",
+    min: -180,
+    max: 180,
+    step: 1
+})
+
+meshRotX.on('change', function(ev){
+    mesh.rotation.x = ev.value * Math.PI/180
+})
+
+const meshRotY = folderRotationMesh.addInput(mesh.rotation, "y", {
+    label: "axis y",
+    min: -180,
+    max: 180,
+    step: 1
+})
+
+meshRotY.on('change', function(ev){
+    mesh.rotation.y = ev.value * Math.PI/180
+})
+
+const meshRotZ = folderRotationMesh.addInput(mesh.rotation, "z", {
+    label: "axis z",
+    min: -180,
+    max: 180,
+    step: 1
+})
+
+meshRotZ.on('change', function(ev){
+    mesh.rotation.z = ev.value * Math.PI/180
+})
+
+folderMesh.addInput(mesh.material, "wireframe")
+folderMesh.addInput(mesh, "visible")
+
+const PARAMS = {
+    color: '#ff0000',
+    spin: () => {
+        gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + Math.PI * 2 })
+    }
+  };
+
+  folderMesh.addInput(PARAMS, "color").on("change",(e)=>{
+    material.color.set(new THREE.Color(e.value))
+})
+
+folderMesh.addButton({
+    title: 'spin'
+}).on("click",PARAMS.spin)
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height,0.1,100)
